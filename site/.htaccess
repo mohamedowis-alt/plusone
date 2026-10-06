@@ -2,6 +2,13 @@
 Options -Indexes
 DirectoryIndex index.php
 
+# This site often lives in a folder inside another website's folder (an addon
+# domain). Switching the rewrite engine on here, with no rules, stops the outer
+# website's rewrite rules from being applied to this one.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+</IfModule>
+
 <FilesMatch "^(config\.php|INSTALL\.md|.*\.sqlite)$">
   Require all denied
 </FilesMatch>
