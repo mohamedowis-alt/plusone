@@ -14,7 +14,7 @@ declare(strict_types=1);
 // Steps must work on both MySQL and SQLite. Never edit a step that has already
 // been deployed. Add a new one instead.
 
-const SCHEMA_VERSION = 2;
+const SCHEMA_VERSION = 3;
 
 function migration_steps(): array
 {
@@ -47,7 +47,29 @@ function migration_steps(): array
                 }
             }
         },
-        // 3 => function (PDO $db, string $driver): void {
+        // 3: the pizza party and coffee break menus were rewritten (more Italian, more international).
+        // Only a menu still marked "To review" is rewritten. One the team has saved is left alone.
+        3 => function (PDO $db, string $driver): void {
+            $menus = require __DIR__ . '/menus.first.php';
+            foreach (['pizza-party', 'coffee-break'] as $slug) {
+                $sid = val('SELECT id FROM sections WHERE slug = ?', [$slug]);
+                $drafts = $sid ? rows('SELECT id FROM menus WHERE section_id = ? AND is_sample = 1 ORDER BY id', [$sid]) : [];
+                if (count($drafts) !== 1) {
+                    continue;
+                }
+                $mid = (int) $drafts[0]['id'];
+                $m = $menus[$slug];
+                update('menus', ['title' => $m['title'], 'season' => $m['season'], 'intro' => $m['intro'], 'updated_at' => now()], $mid);
+                q('DELETE FROM dishes WHERE menu_id = ?', [$mid]);
+                foreach ($m['dishes'] as $n => $d) {
+                    insert('dishes', [
+                        'menu_id' => $mid, 'course' => $d[0], 'name' => $d[1], 'description' => $d[2], 'tag' => $d[3],
+                        'sort_order' => $n + 1,
+                    ]);
+                }
+            }
+        },
+        // 4 => function (PDO $db, string $driver): void {
         //     $db->exec("ALTER TABLE requests ADD COLUMN source VARCHAR(80) NOT NULL DEFAULT ''");
         // },
     ];
