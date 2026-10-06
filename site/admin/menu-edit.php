@@ -140,7 +140,7 @@ admin_head($id ? 'Edit menu' : 'Add a menu', 'menus');
 </div>
 
 <?php foreach ($errors as $err): ?><p class="note bad" role="alert"><?= e($err) ?></p><?php endforeach; ?>
-<?php if ((int) $menu['is_sample']): ?><p class="note warn">This is a sample menu. Saving it with your own dishes makes it yours.</p><?php endif; ?>
+<?php if ((int) $menu['is_sample']): ?><p class="note warn">This menu is a first draft and has not been reviewed by the kitchen. Check every dish, description and source tag. Saving it confirms it.</p><?php endif; ?>
 
 <form method="post" enctype="multipart/form-data">
   <?= csrf_field() ?>

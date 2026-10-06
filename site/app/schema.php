@@ -92,7 +92,7 @@ function create_schema(PDO $pdo, string $driver): void
     }
 }
 
-/** Starting settings, the six parties and one sample menu for each. */
+/** Starting settings, the six parties and the first menu for each. */
 function seed_content(PDO $pdo, string $notifyEmail, string $fromEmail): void
 {
     $put = function (string $table, array $data) use ($pdo): int {
@@ -123,81 +123,34 @@ function seed_content(PDO $pdo, string $notifyEmail, string $fromEmail): void
         $put('settings', ['k' => $k, 'v' => $v]);
     }
 
-    // name, sum, best for, mark, colour, season, menu title, intro, dishes [course, name, description, tag]
+    // name, sum, best for, mark, colour
     $parties = [
-        ['Buffet', 'One table', 'everyone', 'Family gatherings, company days', 'cloche', 'green',
-            'Autumn 2026', 'The autumn table', 'Big dishes in the middle, a plate for everyone, and a card on each dish that says where it came from.', [
-                ['To start', 'Garden leaves', 'Picked this week and dressed at the table.', 'grown'],
-                ['To start', 'Ruby beets', 'Roasted beetroot, white cheese, herbs.', 'grown'],
-                ['To start', 'Baladi bread', 'Baked the same morning.', 'made'],
-                ['The table', 'Lemon chicken', 'Roasted whole, carved to order.', 'cooked'],
-                ['The table', 'Charcoal kofta', 'From our own butchery, grilled over charcoal.', 'butchery'],
-                ['The table', 'Overnight beef', 'Cooked low, all night.', 'butchery'],
-                ['The table', 'Golden rice', 'Toasted vermicelli and ghee.', 'made'],
-                ['To finish', 'Rice pudding', 'Slow-cooked milk and cinnamon.', 'made'],
-                ['To finish', 'Fruit of the week', 'Whatever is best right now.', 'grown'],
-            ]],
-        ['Pizza party', 'Pizza', 'people', 'Birthdays, casual evenings', 'pizza', 'yellow',
-            'Autumn 2026', 'Hot from the oven', 'Our oven, our dough, your garden. Guests choose, we stretch and bake in front of them.', [
-                ['Pizzas', 'The red one', 'Tomato, cheese, basil.', 'cooked'],
-                ['Pizzas', 'The white one', 'White cheese, rocket, lemon.', 'cooked'],
-                ['Pizzas', 'The butcher', 'Our own sausage, peppers, onion.', 'butchery'],
-                ['Pizzas', 'The garden', 'Vegetables of the week.', 'grown'],
-                ['On the side', 'Tomato and leaves', 'A big bowl to share.', 'grown'],
-                ['On the side', 'Dough balls', 'With garlic butter.', 'made'],
-            ]],
-        ['Barbecue', 'Fire', 'friends', 'Gardens, rooftops, Sahel', 'flame', 'red',
-            'Autumn 2026', 'Around the fire', 'A grill, a grill master and meat from our own butchery. Everyone ends up standing around it.', [
-                ['From the grill', 'Charcoal kofta', 'Minced the same day.', 'butchery'],
-                ['From the grill', 'Lamb chops', 'Salt, pepper, fire.', 'butchery'],
-                ['From the grill', 'Chicken shish', 'Marinated overnight in yoghurt and lemon.', 'cooked'],
-                ['From the grill', 'Blistered vegetables', 'Peppers, onions, aubergine.', 'grown'],
-                ['On the table', 'Baladi bread', 'Warmed on the grill.', 'made'],
-                ['On the table', 'Tahini and tomato salad', 'Made that morning.', 'made'],
-                ['On the table', 'Charred corn', 'With butter and salt.', 'grown'],
-            ]],
-        ['Coffee break', 'Coffee', 'break', 'Meetings and trainings', 'steam', 'purple',
-            'Autumn 2026', 'The good break', 'Food people leave their desks for. Set up before your meeting, cleared before the next one.', [
-                ['To drink', 'Coffee and tea', 'Brewed on the spot.', 'cooked'],
-                ['To drink', 'Juice of the day', 'Pressed that morning.', 'grown'],
-                ['To eat', 'Feteer bites', 'With honey and white cheese.', 'made'],
-                ['To eat', 'Cheese and herb pastries', 'Baked the same morning.', 'made'],
-                ['To eat', 'Date and nut bites', 'Dates, nuts, nothing else.', 'made'],
-                ['To eat', 'Fruit cups', 'Cut to order.', 'grown'],
-            ]],
-        ['Birthday', 'Cake', 'candles', 'Children and milestones', 'hat', 'amber',
-            'Autumn 2026', 'Make a wish', 'Food children finish and parents steal. And a cake made for the day.', [
-                ['Small hands', 'Mini burgers', 'Beef from our own butchery, soft buns.', 'butchery'],
-                ['Small hands', 'Crispy chicken', 'Real chicken, crumbed by hand.', 'made'],
-                ['Small hands', 'Pizza squares', 'Tomato and cheese.', 'cooked'],
-                ['Small hands', 'Fruit sticks', 'The colourful plate that empties first.', 'grown'],
-                ['The moment', 'The birthday cake', 'Made to order. Tell us the name and the number.', 'made'],
-                ['The moment', 'Lemonade', 'Lemons, mint, a little sugar.', 'made'],
-            ]],
-        ['Iftar', 'Sunset', 'family', 'Home and company iftars', 'crescent', 'black',
-            'Ramadan 2027', 'When the sun sets', 'On the table before the call to prayer, served to share, the way an iftar should be.', [
-                ['To break the fast', 'Dates and milk', 'Waiting at every place.', 'grown'],
-                ['To break the fast', 'Lentil soup', 'With lemon and toasted bread.', 'made'],
-                ['To break the fast', 'Sambousek', 'Cheese and meat, folded by hand.', 'made'],
-                ['The table', 'Lamb fattah', 'Our lamb, rice, crisp bread, garlic and vinegar.', 'butchery'],
-                ['The table', 'Lemon chicken', 'Roasted whole, carved to order.', 'cooked'],
-                ['The table', 'Stuffed vine leaves', 'Rolled by hand.', 'made'],
-                ['To finish', 'Konafa', 'With cream, still warm.', 'made'],
-                ['To finish', 'Karkade and qamar el-din', 'Made in our kitchen.', 'made'],
-            ]],
+        ['Buffet', 'One table', 'everyone', 'Family gatherings, company days', 'cloche', 'green'],
+        ['Pizza party', 'Pizza', 'people', 'Birthdays, casual evenings', 'pizza', 'yellow'],
+        ['Barbecue', 'Fire', 'friends', 'Gardens, rooftops, Sahel', 'flame', 'red'],
+        ['Coffee break', 'Coffee', 'break', 'Meetings and trainings', 'steam', 'purple'],
+        ['Birthday', 'Cake', 'candles', 'Children and milestones', 'hat', 'amber'],
+        ['Iftar', 'Sunset', 'family', 'Home and company iftars', 'crescent', 'black'],
     ];
+    $menus = require __DIR__ . '/menus.first.php';
 
     foreach ($parties as $i => $p) {
-        [$name, $a, $b, $best, $mark, $colour, $season, $title, $intro, $dishes] = $p;
+        [$name, $a, $b, $best, $mark, $colour] = $p;
+        $slug = strtolower(str_replace(' ', '-', $name));
         $sid = $put('sections', [
-            'slug' => strtolower(str_replace(' ', '-', $name)), 'name' => $name, 'sum_a' => $a, 'sum_b' => $b,
+            'slug' => $slug, 'name' => $name, 'sum_a' => $a, 'sum_b' => $b,
             'best_for' => $best, 'mark' => $mark, 'colour' => $colour, 'sort_order' => $i + 1, 'is_visible' => 1,
         ]);
+        if (!isset($menus[$slug])) {
+            continue;
+        }
+        $m = $menus[$slug];
+        // is_sample = 1 shows the menu as "To review" in the admin until the team saves it.
         $mid = $put('menus', [
-            'section_id' => $sid, 'title' => $title, 'season' => $season, 'intro' => $intro, 'image' => '', 'pdf' => '',
+            'section_id' => $sid, 'title' => $m['title'], 'season' => $m['season'], 'intro' => $m['intro'], 'image' => '', 'pdf' => '',
             'is_published' => 1, 'is_sample' => 1, 'sort_order' => 1, 'updated_at' => date('Y-m-d H:i:s'),
         ]);
-        foreach ($dishes as $j => $d) {
+        foreach ($m['dishes'] as $j => $d) {
             $put('dishes', [
                 'menu_id' => $mid, 'course' => $d[0], 'name' => $d[1], 'description' => $d[2], 'tag' => $d[3],
                 'sort_order' => $j + 1,

@@ -43,7 +43,7 @@ admin_head('Menus', 'menus');
 </div>
 
 <?php if ($samples > 0): ?>
-<p class="note warn"><strong><?= $samples ?> sample <?= $samples === 1 ? 'menu is' : 'menus are' ?> on the site.</strong> They were written to show how a menu looks. Replace the dishes with your real ones, or delete them.</p>
+<p class="note warn"><strong><?= $samples ?> <?= $samples === 1 ? 'menu is' : 'menus are' ?> waiting for the kitchen's review.</strong> They were written as a first draft. Check every dish, description and source tag, change what needs changing, then save the menu to confirm it.</p>
 <?php endif; ?>
 
 <?php foreach ($sections as $s): ?>
@@ -64,7 +64,7 @@ admin_head('Menus', 'menus');
     <tbody>
 <?php foreach ($bySection[$s['id']] as $m): ?>
       <tr>
-        <td><a class="strong" href="menu-edit.php?id=<?= (int) $m['id'] ?>"><?= e($m['title']) ?></a> <?php if ((int) $m['is_sample']): ?><span class="pill sample">Sample</span><?php endif; ?></td>
+        <td><a class="strong" href="menu-edit.php?id=<?= (int) $m['id'] ?>"><?= e($m['title']) ?></a> <?php if ((int) $m['is_sample']): ?><span class="pill sample">To review</span><?php endif; ?></td>
         <td><?= e($m['season']) ?></td>
         <td><?= (int) $m['dish_count'] ?><?= $m['image'] !== '' ? ', picture' : '' ?><?= $m['pdf'] !== '' ? ', PDF' : '' ?></td>
         <td><span class="pill <?= (int) $m['is_published'] ? 's-won' : 'off' ?>"><?= (int) $m['is_published'] ? 'Showing' : 'Hidden' ?></span></td>
