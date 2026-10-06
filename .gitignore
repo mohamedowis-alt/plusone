@@ -1,0 +1,11 @@
+# Live data and secrets never go into GitHub. They exist only on the server.
+site/config.php
+site/version.txt
+site/storage/*
+!site/storage/.htaccess
+!site/storage/index.html
+site/uploads/menus/*
+!site/uploads/menus/index.html
+
+.DS_Store
+Thumbs.db
