@@ -6,6 +6,9 @@ if (!installed()) {
     redirect('install.php');
 }
 
+// The page changes whenever the team edits a menu, so nothing in between may keep an old copy.
+header('Cache-Control: no-cache, no-store, must-revalidate');
+
 $sections = public_sections();
 $wa = wa_number((string) setting('whatsapp', ''));
 $waLink = $wa !== '' ? 'https://wa.me/' . $wa : '';
