@@ -1,0 +1,26 @@
+# Every change is checked here. The live site reads the result: Admin > Updates
+# will not install a version that failed this check.
+
+name: Check the site
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check the site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_sqlite, mbstring, fileinfo, gd, zip
+          coverage: none
+      - run: bash scripts/check.sh

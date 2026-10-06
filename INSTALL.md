@@ -3,7 +3,7 @@
 The public site, the quote request wizard and the team admin, in one package.
 Everything that goes on the server is in the `site` folder.
 
-This file covers the first install. For how updates reach the live site from GitHub, see `README.md`.
+This file covers the first install. For how the live site updates itself from GitHub, see `README.md`.
 
 ## What it does
 
@@ -19,12 +19,13 @@ This file covers the first install. For how updates reach the live site from Git
 - **Parties**: add or change the kinds of party. Each is a tile, a menu tab and a wizard choice.
 - **Settings**: the email address (or addresses) that receive quote requests, how email is sent, WhatsApp and Instagram.
 - **Team**: who can sign in.
+- **Updates**: install the newest version from GitHub with one button, or roll the last update back.
 
 Every request is saved in the database first and emailed second, so a mail problem never loses a request.
 
 ## What the server needs
 
-- PHP 8.0 or newer, with PDO (MySQL or SQLite), mbstring and fileinfo. GD is recommended (it resizes uploaded pictures).
+- PHP 8.0 or newer, with PDO (MySQL or SQLite), mbstring and fileinfo. GD is recommended (it resizes uploaded pictures). The zip extension and curl are needed for updates from GitHub.
 - MySQL 5.7+ or MariaDB 10.3+. Or nothing: the installer can use a built-in file database instead.
 - Apache with `.htaccess` enabled (standard on cPanel-style hosting). For Nginx see the note at the end.
 - HTTPS on the domain.
@@ -32,14 +33,19 @@ Every request is saved in the database first and emailed second, so a mail probl
 ## Install (about ten minutes)
 
 1. In the hosting panel, create an empty MySQL database and a user for it. Note the name, user and password.
-2. Get the files onto the server. Either connect the hosting to GitHub (see `README.md`) and let the first deploy upload them, or upload the **contents** of the `site` folder to the web root (usually `public_html`) by hand.
+2. Upload the **contents** of the `site` folder to the site's folder on the server (cPanel File Manager or FTP). This is the only manual upload: later versions are installed from the admin.
 3. Make the folders `storage` and `uploads/menus` writable by the web server (755 is usually enough, 775 on some hosts).
 4. Open `https://your-domain/install.php` and fill in the form: database, your sign-in, the address that receives quote requests, and the address the site sends from.
 5. Sign in at `https://your-domain/admin/`.
 6. In **Settings**, set up email (next section) and press **Send a test email**.
-7. In **Menus**, replace the six sample menus with the real ones.
+7. In **Updates**, connect the site to its GitHub repository (see `README.md`).
+8. In **Menus**, replace the six sample menus with the real ones.
 
-Once the site is set up, `install.php` answers "not found" and does nothing, so it is safe that updates upload it again.
+Once the site is set up, `install.php` answers "not found" and does nothing.
+
+### On hosting that already runs another site
+
+The site can share a hosting account with another website (for example amsforum.com on cPanel). Add the +1 domain in the hosting panel so that it points at **its own folder**, and upload there. Set that domain to PHP 8.0 or newer. Nothing in this site reads or writes outside its own folder.
 
 ## Email: do this properly once
 
@@ -90,7 +96,8 @@ Tested on PHP 8.3 with the built-in file database (SQLite): install, the full wi
 
 Not tested here, so check on the real host:
 - **MySQL.** No MySQL server was available in the build environment. The SQL is kept plain and the same code paths ran on SQLite, but run the installer and one full request on the real database before launch.
-- **The GitHub deploy.** The check script was run here and it passes on good code and stops broken code. The upload step itself could not be run without a GitHub repository and a host, so watch the first deploy.
+- **Updates against real GitHub.** The updater was tested end to end against a local stand-in for GitHub (update, refused broken update, refused failed check, roll back, database change). The build environment could not reach GitHub's own service, and the repository and its token did not exist yet, so run "Check for updates" once on the live site.
+- **GitHub's run of the check.** The check script itself was run here and passes on good code and stops broken code.
 - **Apache `.htaccess` rules** (the test server does not read them). After install, confirm that `https://your-domain/app/bootstrap.php` and `https://your-domain/storage/` are refused.
 - **Your real mailbox.** Use "Send a test email".
 - Hanken Grotesk from Google Fonts (the build environment had no internet; a stand-in was used for screenshots).

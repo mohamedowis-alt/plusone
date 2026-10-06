@@ -19,6 +19,7 @@ function admin_head(string $title, string $active): void
         'sections' => ['sections.php', 'Parties'],
         'settings' => ['settings.php', 'Settings'],
         'team'     => ['team.php', 'Team'],
+        'updates'  => ['updates.php', 'Updates'],
     ];
     $flash = flash();
     ?><!doctype html>
