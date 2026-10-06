@@ -38,7 +38,7 @@ grep -q 'Bring us' <<< "$HOME_PAGE" || fail "home page"
 grep -q 'id="wizard"' <<< "$HOME_PAGE" || fail "quote wizard missing"
 if grep -qi 'EGP' <<< "$HOME_PAGE"; then fail "a price is showing on the home page"; fi
 
-for path in assets/css/site.css assets/js/site.js assets/fonts/Eyeful-Regular.woff admin/login.php; do
+for path in assets/css/site.css assets/js/site.js admin/login.php; do
   [ "$(curl -s -o /dev/null -w '%{http_code}' "$H/$path")" = "200" ] || fail "$path"
 done
 

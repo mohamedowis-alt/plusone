@@ -7,5 +7,9 @@ site/storage/*
 site/uploads/menus/*
 !site/uploads/menus/index.html
 
+# The Eyeful font is licensed, so it is not published here. It is uploaded once
+# with the site and updates never remove it.
+site/assets/fonts/Eyeful-Regular.*
+
 .DS_Store
 Thumbs.db

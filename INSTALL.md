@@ -76,7 +76,7 @@ The choices (occasions, vibes, areas, dietary needs and so on) live in one file:
 
 ## Fonts
 
-- Headlines use **Eyeful**, included in `assets/fonts`. Check that your Eyeful licence covers use on a website.
+- Headlines use **Eyeful**. Its files are in the site package under `assets/fonts` but are deliberately not in the GitHub repository, because the font is licensed. Upload them with the site. Check that your Eyeful licence covers use on a website.
 - Text uses **Hanken Grotesk**, loaded from Google Fonts.
 
 ## Looking after it

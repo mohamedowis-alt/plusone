@@ -33,12 +33,18 @@ So menus and requests are managed in the admin, never through GitHub.
 
 ## Connect the live site to this repository (once)
 
-Keep this repository **private**: it holds the Eyeful font file.
+In the site's admin, open **Updates > Where updates come from** and enter the repository (`mohamedowis-alt/plusone`) and the branch (`main`). Save. The page says whether it can reach the repository.
 
-1. On GitHub, create an access token that can only read this repository: **Settings > Developer settings > Personal access tokens > Fine-grained tokens > Generate new token**. Repository access: only this repository. Permissions: **Contents: Read-only** and **Actions: Read-only**.
-2. In the site's admin, open **Updates > Where updates come from** and enter the repository (`owner/name`), the branch (`main`) and the token. Save. The page says whether it can reach the repository.
+While the repository is public, that is all. If it is made private later, the site also needs an access token:
+
+1. On GitHub: **Settings > Developer settings > Personal access tokens > Fine-grained tokens > Generate new token**. Repository access: only this repository. Permissions: **Contents: Read-only** and **Actions: Read-only**.
+2. Paste it into **Access token** on the Updates page and save.
 
 A token expires on the date you choose. When it does, the Updates page says GitHub refused it: create a new one and save it.
+
+## The Eyeful font is not in this repository
+
+Eyeful is a licensed font, so its files are kept out of GitHub (see `.gitignore`). They are in the site package and go to the server with the first upload, in `assets/fonts/`. Updates never remove them. If they are missing, headlines fall back to a plain condensed font.
 
 ## Make a change
 
