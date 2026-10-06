@@ -172,7 +172,7 @@ $steps = ['The occasion', 'The guests', 'The party', 'The service', 'When and wh
   <div class="wrap">
     <div class="head">
       <p class="eyebrow">Choose your party</p>
-      <h2><?= count($sections) === 6 ? 'Six parties,' : 'Parties,' ?><br>ready to go</h2>
+      <h2><?= e(([2 => 'Two', 3 => 'Three', 4 => 'Four', 5 => 'Five', 6 => 'Six', 7 => 'Seven', 8 => 'Eight', 9 => 'Nine', 10 => 'Ten'][count($sections)] ?? 'Our') . ' parties,') ?><br>ready to go</h2>
       <p class="lede">Ways to bring people together. Each has its own menu, and each can be shaped around your guests.</p>
     </div>
     <div class="parties-grid">
@@ -195,7 +195,7 @@ $steps = ['The occasion', 'The guests', 'The party', 'The service', 'When and wh
     <div class="head">
       <p class="eyebrow">Know your source</p>
       <h2>This season's<br>menus</h2>
-      <p class="lede">Every dish says where it came from. Menus change with the season, and each one can be shaped around your guests.</p>
+      <p class="lede">Every dish says where it came from. Each menu is a starting point: tell us what to add, swap or leave out, and we shape it around your guests.</p>
     </div>
 <?php if ($sections): ?>
     <div class="tabs js-only" role="tablist" aria-label="Parties">
@@ -236,7 +236,7 @@ $steps = ['The occasion', 'The guests', 'The party', 'The service', 'When and wh
 <?php endif; ?>
         </div>
         <footer class="menu-foot">
-          <p>Shaped around your guests, and priced once we know your gathering.</p>
+          <p>A starting point. Add, swap or leave out dishes when you ask for a quote.</p>
           <div class="links">
             <?php if ($m['pdf'] !== ''): ?><a class="btn small" href="uploads/menus/<?= e($m['pdf']) ?>" target="_blank" rel="noopener">Download the menu</a><?php endif; ?>
             <a class="btn btn-ink small" href="#quote" data-party="<?= e($s['name']) ?>">Ask for this party</a>
@@ -398,7 +398,7 @@ $steps = ['The occasion', 'The guests', 'The party', 'The service', 'When and wh
 <?php endforeach; ?>
         </div>
         <div class="fields" style="margin-top:20px">
-          <label class="field full"><span>Notes <i>(a theme, a favourite dish, a surprise)</i></span><textarea name="notes" maxlength="2000"></textarea></label>
+          <label class="field full"><span>Notes <i>(dishes to add, swap or leave out, a theme, a surprise)</i></span><textarea name="notes" maxlength="2000"></textarea></label>
           <label class="field"><span>Budget per guest <i>(if you have one in mind)</i></span><input type="text" name="budget" maxlength="160"></label>
         </div>
       </fieldset>

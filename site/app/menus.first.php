@@ -5,7 +5,8 @@
 // description and every source tag needs a cook-through and a yes from the
 // team. In the admin they show as "To review" until someone saves them.
 //
-// Keyed by the party's slug. Each dish is [course, name, one line, source tag].
+// Keyed by the party's slug. A second menu for a party has its own key and names
+// its party in 'section'. Each dish is [course, name, one line, source tag].
 // Source tags: grown = Locally grown, butchery = RDNA butchery,
 // made = Home made, cooked = Cooked to order, '' = no tag.
 
@@ -135,6 +136,47 @@ return [
             ['To finish', 'Konafa', 'With cream, still warm.', 'made'],
             ['To finish', 'Winter fruit', 'Oranges and strawberries, at their best at this time of year.', 'grown'],
             ['To finish', 'Tea with fresh mint', 'And coffee, for the long evening.', ''],
+        ],
+    ],
+
+    // A second, simpler barbecue: American street food.
+    'barbecue-backyard' => [
+        'section' => 'barbecue',
+        'season' => 'All year',
+        'title' => 'The backyard',
+        'intro' => 'American street food from our butchery: burgers, sausages and slow brisket. Paper trays, soft buns, no cutlery needed.',
+        'dishes' => [
+            ['From the grill', 'The smash burger', 'Beef from our butchery, smashed on the flat-top, with cheese, pickles and our burger sauce.', 'butchery'],
+            ['From the grill', 'The chicken burger', 'Our own chicken, crisp outside, with slaw in a soft bun.', 'cooked'],
+            ['From the grill', 'Sausage in a bun', 'Our own beef sausage, grilled, with soft onions and mustard.', 'butchery'],
+            ['From the grill', 'Twelve-hour brisket', 'Cooked low for twelve hours and sliced at the board. In a bun, or on its own.', 'butchery'],
+            ['On the side', 'Fries, skin on', 'Cut that morning, fried to order.', 'cooked'],
+            ['On the side', 'Slaw', 'Cabbage and carrot from the farm, in a light dressing.', 'grown'],
+            ['On the side', 'Corn on the cob', 'Charred on the grill, with butter and salt.', 'grown'],
+            ['On the side', 'Pickles and sauces', 'House pickles, burger sauce, barbecue sauce and mustard, made in our kitchen.', 'made'],
+            ['To finish', 'Cookies, still warm', 'Chocolate chunk. Baked that day and served warm.', 'made'],
+            ['To drink', 'Lemonade with mint', 'Lemons, mint, a little sugar.', 'made'],
+        ],
+    ],
+
+    'taco-bar' => [
+        'season' => 'All year',
+        'title' => 'Build your own',
+        'intro' => 'Warm tortillas, fillings straight from the grill and the pan, and a bar of everything to pile on top. Guests build their own, and go back for another.',
+        'dishes' => [
+            ['The fillings', 'Slow beef', 'Beef from our butchery, cooked low with cumin and chilli until it pulls apart.', 'butchery'],
+            ['The fillings', 'Charcoal chicken', 'Our own chicken with lime and garlic, off the grill and sliced to order.', 'cooked'],
+            ['The fillings', 'Spiced sausage', 'Our own sausage, crumbled and crisped in the pan with paprika.', 'butchery'],
+            ['The fillings', 'Charred cauliflower', 'From the farm, roasted with cumin and lime. For guests who skip the meat.', 'grown'],
+            ['The bar', 'Warm tortillas', 'Heated on the plancha as you reach the front of the line.', 'cooked'],
+            ['The bar', 'Fresh salsa', 'Tomato, onion, coriander and lime, chopped that day.', 'made'],
+            ['The bar', 'Guacamole', 'Mashed to order.', 'cooked'],
+            ['The bar', 'Pink onions and slaw', 'Quick-pickled onions and a crisp cabbage slaw.', 'made'],
+            ['The bar', 'House hot sauce', 'Mild, medium, and one to be careful with.', 'made'],
+            ['On the side', 'Corn in a cup', 'Charred corn with lime, chilli and cheese.', 'grown'],
+            ['On the side', 'Tortilla chips', 'Fried that day, with salsa.', 'made'],
+            ['To finish', 'Churros to order', 'Fried in front of you, rolled in cinnamon sugar, with chocolate.', 'cooked'],
+            ['To drink', 'Hibiscus cooler', 'Mexico calls it jamaica, Egypt calls it karkade. Served cold with lime.', 'made'],
         ],
     ],
 ];

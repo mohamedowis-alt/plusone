@@ -14,7 +14,7 @@ declare(strict_types=1);
 // Steps must work on both MySQL and SQLite. Never edit a step that has already
 // been deployed. Add a new one instead.
 
-const SCHEMA_VERSION = 3;
+const SCHEMA_VERSION = 4;
 
 function migration_steps(): array
 {
@@ -69,7 +69,38 @@ function migration_steps(): array
                 }
             }
         },
-        // 4 => function (PDO $db, string $driver): void {
+        // 4: a second, American barbecue menu, and a new party: the taco bar.
+        // Nothing existing is changed. Each addition is skipped if it is already there.
+        4 => function (PDO $db, string $driver): void {
+            $menus = require __DIR__ . '/menus.first.php';
+            if (!val('SELECT id FROM sections WHERE slug = ?', ['taco-bar'])) {
+                insert('sections', [
+                    'slug' => 'taco-bar', 'name' => 'Taco bar', 'sum_a' => 'Tacos', 'sum_b' => 'your way',
+                    'best_for' => 'Casual evenings, office Thursdays', 'mark' => 'plain', 'colour' => 'green',
+                    'sort_order' => (int) val('SELECT MAX(sort_order) FROM sections') + 1, 'is_visible' => 1,
+                ]);
+            }
+            foreach (['barbecue-backyard', 'taco-bar'] as $key) {
+                $m = $menus[$key];
+                $sid = val('SELECT id FROM sections WHERE slug = ?', [$m['section'] ?? $key]);
+                if (!$sid || val('SELECT COUNT(*) FROM menus WHERE section_id = ? AND title = ?', [$sid, $m['title']])) {
+                    continue;
+                }
+                $mid = insert('menus', [
+                    'section_id' => (int) $sid, 'title' => $m['title'], 'season' => $m['season'], 'intro' => $m['intro'],
+                    'image' => '', 'pdf' => '', 'is_published' => 1, 'is_sample' => 1,
+                    'sort_order' => (int) val('SELECT COUNT(*) FROM menus WHERE section_id = ?', [$sid]) + 1,
+                    'updated_at' => now(),
+                ]);
+                foreach ($m['dishes'] as $n => $d) {
+                    insert('dishes', [
+                        'menu_id' => $mid, 'course' => $d[0], 'name' => $d[1], 'description' => $d[2], 'tag' => $d[3],
+                        'sort_order' => $n + 1,
+                    ]);
+                }
+            }
+        },
+        // 5 => function (PDO $db, string $driver): void {
         //     $db->exec("ALTER TABLE requests ADD COLUMN source VARCHAR(80) NOT NULL DEFAULT ''");
         // },
     ];

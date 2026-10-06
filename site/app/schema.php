@@ -131,8 +131,10 @@ function seed_content(PDO $pdo, string $notifyEmail, string $fromEmail): void
         ['Coffee break', 'Coffee', 'break', 'Meetings and trainings', 'steam', 'purple'],
         ['Birthday', 'Cake', 'candles', 'Children and milestones', 'hat', 'amber'],
         ['Iftar', 'Sunset', 'family', 'Home and company iftars', 'crescent', 'black'],
+        ['Taco bar', 'Tacos', 'your way', 'Casual evenings, office Thursdays', 'plain', 'green'],
     ];
     $menus = require __DIR__ . '/menus.first.php';
+    $sectionIds = [];
 
     foreach ($parties as $i => $p) {
         [$name, $a, $b, $best, $mark, $colour] = $p;
@@ -141,14 +143,21 @@ function seed_content(PDO $pdo, string $notifyEmail, string $fromEmail): void
             'slug' => $slug, 'name' => $name, 'sum_a' => $a, 'sum_b' => $b,
             'best_for' => $best, 'mark' => $mark, 'colour' => $colour, 'sort_order' => $i + 1, 'is_visible' => 1,
         ]);
-        if (!isset($menus[$slug])) {
+        $sectionIds[$slug] = $sid;
+    }
+
+    // is_sample = 1 shows a menu as "To review" in the admin until the team saves it.
+    $order = [];
+    foreach ($menus as $key => $m) {
+        $slug = $m['section'] ?? $key;
+        if (!isset($sectionIds[$slug])) {
             continue;
         }
-        $m = $menus[$slug];
-        // is_sample = 1 shows the menu as "To review" in the admin until the team saves it.
+        $order[$slug] = ($order[$slug] ?? 0) + 1;
         $mid = $put('menus', [
-            'section_id' => $sid, 'title' => $m['title'], 'season' => $m['season'], 'intro' => $m['intro'], 'image' => '', 'pdf' => '',
-            'is_published' => 1, 'is_sample' => 1, 'sort_order' => 1, 'updated_at' => date('Y-m-d H:i:s'),
+            'section_id' => $sectionIds[$slug], 'title' => $m['title'], 'season' => $m['season'], 'intro' => $m['intro'],
+            'image' => '', 'pdf' => '', 'is_published' => 1, 'is_sample' => 1, 'sort_order' => $order[$slug],
+            'updated_at' => date('Y-m-d H:i:s'),
         ]);
         foreach ($m['dishes'] as $j => $d) {
             $put('dishes', [
