@@ -96,8 +96,7 @@ Tested on PHP 8.3 with the built-in file database (SQLite): install, the full wi
 
 Not tested here, so check on the real host:
 - **MySQL.** No MySQL server was available in the build environment. The SQL is kept plain and the same code paths ran on SQLite, but run the installer and one full request on the real database before launch.
-- **Updates against real GitHub.** The updater was tested end to end against a local stand-in for GitHub (update, refused broken update, refused failed check, roll back, database change). The build environment could not reach GitHub's own service, and the repository and its token did not exist yet, so run "Check for updates" once on the live site.
-- **GitHub's run of the check.** The check script itself was run here and passes on good code and stops broken code.
+- **Updates from a private repository.** The updater was tested against a local stand-in for GitHub (refused broken update, refused failed check, roll back, database change) and then for real against the public repository `mohamedowis-alt/plusone` (check, download, install). The access-token path for a private repository was only tested against the stand-in.
 - **Apache `.htaccess` rules** (the test server does not read them). After install, confirm that `https://your-domain/app/bootstrap.php` and `https://your-domain/storage/` are refused.
 - **Your real mailbox.** Use "Send a test email".
 - Hanken Grotesk from Google Fonts (the build environment had no internet; a stand-in was used for screenshots).
