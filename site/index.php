@@ -315,7 +315,7 @@ $steps = ['The occasion', 'The guests', 'The party', 'The service', 'When and wh
         </div>
         <div class="q js-only">
           <div class="chips" id="guest-presets">
-<?php foreach ([10, 20, 40, 80, 150, 300] as $n): ?>
+<?php foreach ([10, 20, 40, 80, 150, 300, 600] as $n): ?>
             <button type="button" class="tab" data-guests="<?= $n ?>"><?= $n ?></button>
 <?php endforeach; ?>
           </div>
