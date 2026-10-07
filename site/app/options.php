@@ -73,6 +73,7 @@ const SECTION_MARKS = [
     'steam'    => 'Steam',
     'hat'      => 'Party hat',
     'crescent' => 'Crescent',
+    'pumpkin'  => 'Pumpkin',
     'sprout'   => 'Sprout',
     'heart'    => 'Heart',
     'plain'    => 'Plain plus',

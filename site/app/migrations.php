@@ -14,7 +14,7 @@ declare(strict_types=1);
 // Steps must work on both MySQL and SQLite. Never edit a step that has already
 // been deployed. Add a new one instead.
 
-const SCHEMA_VERSION = 5;
+const SCHEMA_VERSION = 6;
 
 function migration_steps(): array
 {
@@ -128,7 +128,12 @@ function migration_steps(): array
                 }
             }
         },
-        // 6 => function (PDO $db, string $driver): void {
+        // 6: Halloween gets its own mark, the pumpkin plus.
+        // Only if the party still wears the plain plus it arrived with. A mark the team chose is left alone.
+        6 => function (PDO $db, string $driver): void {
+            q("UPDATE sections SET mark = 'pumpkin' WHERE slug = 'halloween' AND mark = 'plain'");
+        },
+        // 7 => function (PDO $db, string $driver): void {
         //     $db->exec("ALTER TABLE requests ADD COLUMN source VARCHAR(80) NOT NULL DEFAULT ''");
         // },
     ];
