@@ -49,7 +49,7 @@ function post_list(string $key, array $allowed): array
     return $out;
 }
 
-/** 01016649967 -> 201016649967, for wa.me links. */
+/** 01116417723 -> 201116417723, for wa.me links. */
 function wa_number(string $raw): string
 {
     $d = preg_replace('/\D+/', '', $raw) ?? '';
@@ -62,7 +62,7 @@ function wa_number(string $raw): string
     return $d;
 }
 
-/** 201016649967 -> 0101 664 9967, for display. */
+/** 201116417723 -> 0111 641 7723, for display. */
 function phone_display(string $raw): string
 {
     $d = wa_number($raw);

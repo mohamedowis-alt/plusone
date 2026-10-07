@@ -14,7 +14,7 @@ declare(strict_types=1);
 // Steps must work on both MySQL and SQLite. Never edit a step that has already
 // been deployed. Add a new one instead.
 
-const SCHEMA_VERSION = 6;
+const SCHEMA_VERSION = 7;
 
 function migration_steps(): array
 {
@@ -133,7 +133,12 @@ function migration_steps(): array
         6 => function (PDO $db, string $driver): void {
             q("UPDATE sections SET mark = 'pumpkin' WHERE slug = 'halloween' AND mark = 'plain'");
         },
-        // 7 => function (PDO $db, string $driver): void {
+        // 7: the WhatsApp number changed on 7 October 2026.
+        // Only if the site still holds the number it started with. A number the team has set in Settings is left alone.
+        7 => function (PDO $db, string $driver): void {
+            q("UPDATE settings SET v = ? WHERE k = 'whatsapp' AND v = ?", ['201116417723', '201016649967']);
+        },
+        // 8 => function (PDO $db, string $driver): void {
         //     $db->exec("ALTER TABLE requests ADD COLUMN source VARCHAR(80) NOT NULL DEFAULT ''");
         // },
     ];

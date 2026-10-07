@@ -114,7 +114,7 @@ function seed_content(PDO $pdo, string $notifyEmail, string $fromEmail): void
         'smtp_user'     => '',
         'smtp_pass'     => '',
         'confirm_guest' => '1',
-        'whatsapp'      => '201016649967',
+        'whatsapp'      => '201116417723',
         'instagram'     => 'plusonerdna',
         'site_url'      => '',
         'schema_version' => (string) SCHEMA_VERSION,
