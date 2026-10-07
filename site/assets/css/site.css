@@ -400,7 +400,7 @@ section { padding: clamp(64px, 9vw, 128px) 0; }
 .foot-confetti { position: relative; height: 120px; overflow: hidden; }
 .foot-confetti svg { position: absolute; width: var(--s); height: var(--s); left: var(--x); top: var(--y); fill: var(--c); transform: rotate(var(--rot)); }
 .foot .wrap { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: clamp(24px, 5vw, 64px); align-items: end; }
-.foot .logo { width: 104px; height: auto; fill: currentColor; }
+.foot .logo { width: 109px; height: auto; fill: currentColor; }
 .foot .line { font-family: var(--display); text-transform: uppercase; font-size: clamp(30px, 4vw, 48px); line-height: .92; }
 .foot .contact { display: grid; gap: 6px; font-size: 16px; justify-items: end; text-align: right; }
 .foot .contact a { font-weight: 800; }
