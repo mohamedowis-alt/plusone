@@ -179,4 +179,28 @@ return [
             ['To drink', 'Hibiscus cooler', 'Mexico calls it jamaica, Egypt calls it karkade. Served cold with lime.', 'made'],
         ],
     ],
+
+    // Halloween. The colours come from the food, never from a dye.
+    'halloween' => [
+        'season' => 'October 2026',
+        'title' => 'The pumpkin party',
+        'intro' => 'A Halloween party where the colours come from the food: pumpkin, batata, karkade and beetroot. Nothing is dyed. Live stations for the children, and a table for the grown-ups too.',
+        'dishes' => [
+            ['First bites', 'Pumpkin in a cup', 'Roast pumpkin soup with cumin and toasted seeds, served in small cups.', 'grown'],
+            ['First bites', 'Ruby beets', 'Roast beetroot, white cheese, pomegranate and mint.', 'grown'],
+            ['First bites', 'Burnt aubergine', 'Charred whole over the flame, then tahini, cumin and lemon. With warm bread.', 'made'],
+            ['First bites', 'Orange sticks', 'Carrot, peppers and cucumber with tahini and labneh.', 'grown'],
+            ['Live stations', 'Make a face', 'Children top their own small pizza with a face. Baked in the oven while they watch.', 'cooked'],
+            ['Live stations', 'Mini burgers', 'Beef from our butchery, soft buns baked in our kitchen.', 'butchery'],
+            ['Live stations', 'Crispy chicken', 'Our own chicken, crumbed by hand.', 'made'],
+            ['Live stations', 'Kofta rolls', 'Charcoal kofta in warm bread with tahini and pickles. For the grown-ups.', 'butchery'],
+            ['Live stations', 'Pumpkin freekeh', 'Smoked green wheat with roast pumpkin and toasted nuts. A main for guests who skip the meat.', 'grown'],
+            ['Treats', 'The batata cart', 'Sweet potato roasted until it caramelises, with cream and black honey.', 'grown'],
+            ['Treats', "Qar' asali, warm", 'The Egyptian baked pumpkin pudding, in small pots.', 'made'],
+            ['Treats', 'The treat bar', 'Sweets made in our kitchen to fill a paper bag: sesame and peanut brittle, date and cocoa balls, popcorn.', 'made'],
+            ['Treats', 'Karkade pops', 'Ice pops made from karkade, fruit and a little sugar.', 'made'],
+            ['To drink', 'Red punch', 'Cold karkade with pomegranate seeds.', 'made'],
+            ['To drink', 'Real hot chocolate', 'Chocolate melted into milk. No powder.', 'made'],
+        ],
+    ],
 ];

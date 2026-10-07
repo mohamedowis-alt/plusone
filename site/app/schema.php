@@ -132,6 +132,7 @@ function seed_content(PDO $pdo, string $notifyEmail, string $fromEmail): void
         ['Birthday', 'Cake', 'candles', 'Children and milestones', 'hat', 'amber'],
         ['Iftar', 'Sunset', 'family', 'Home and company iftars', 'crescent', 'black'],
         ['Taco bar', 'Tacos', 'your way', 'Casual evenings, office Thursdays', 'plain', 'green'],
+        ['Halloween', 'Trick', 'treat', "Children's parties, schools, office Thursdays", 'plain', 'black'],
     ];
     $menus = require __DIR__ . '/menus.first.php';
     $sectionIds = [];
