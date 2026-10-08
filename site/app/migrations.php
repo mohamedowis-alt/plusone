@@ -14,7 +14,7 @@ declare(strict_types=1);
 // Steps must work on both MySQL and SQLite. Never edit a step that has already
 // been deployed. Add a new one instead.
 
-const SCHEMA_VERSION = 7;
+const SCHEMA_VERSION = 8;
 
 function migration_steps(): array
 {
@@ -138,7 +138,15 @@ function migration_steps(): array
         7 => function (PDO $db, string $driver): void {
             q("UPDATE settings SET v = ? WHERE k = 'whatsapp' AND v = ?", ['201116417723', '201016649967']);
         },
-        // 8 => function (PDO $db, string $driver): void {
+        // 8: the Arabic page. Parties, menus and dishes each get an Arabic field beside the English one,
+        // and a request remembers the language it was written in.
+        // The Arabic is filled in only where the English is still the text the site started with.
+        // Anything the team has rewritten is left alone and shows in English until its Arabic is typed in the admin.
+        8 => function (PDO $db, string $driver): void {
+            arabic_columns($db, $driver);
+            arabic_fill($db);
+        },
+        // 9 => function (PDO $db, string $driver): void {
         //     $db->exec("ALTER TABLE requests ADD COLUMN source VARCHAR(80) NOT NULL DEFAULT ''");
         // },
     ];

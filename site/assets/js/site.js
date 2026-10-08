@@ -5,6 +5,8 @@
   var cfg = window.PLUSONE || {};
   var $ = function (sel, root) { return (root || document).querySelector(sel); };
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+  var T = cfg.t || {};
+  var rtl = document.documentElement.dir === 'rtl';
   var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var PLUS = '<svg class="plus" viewBox="0 0 100 100" aria-hidden="true"><path d="' + (cfg.plus || '') + '"/></svg>';
 
@@ -65,6 +67,7 @@
     t.addEventListener('keydown', function (ev) {
       var step = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0;
       if (!step) { return; }
+      if (rtl) { step = -step; }
       ev.preventDefault();
       var next = tabs[(i + step + tabs.length) % tabs.length];
       showTab(next.id.replace('tab-', ''), true);
@@ -91,6 +94,19 @@
 
   function checked(name) { var el = form.querySelector('[name="' + name + '"]:checked'); return el ? el.value : ''; }
   function checkedAll(name) { return $$('[name="' + name + '"]:checked', form).map(function (el) { return el.value; }); }
+  // The name a guest sees for each ticked choice. In Arabic it differs from the value that is sent.
+  function checkedLabels(name) { return $$('[name="' + name + '"]:checked', form).map(function (el) { return el.getAttribute('data-label') || el.value; }); }
+
+  function guestsText(n) {
+    if (cfg.lang === 'ar') {
+      // Arabic counts in its own way: 1 and 2 have their own words, 3 to 10 take the plural, the rest the singular.
+      if (n === 1) { return 'ضيف واحد'; }
+      if (n === 2) { return 'ضيفان'; }
+      var r = n % 100;
+      return n + (r >= 3 && r <= 10 ? ' ضيوف' : r >= 11 ? ' ضيفاً' : ' ضيف');
+    }
+    return n + (n === 1 ? ' guest' : ' guests');
+  }
   function field(name) { return form.elements[name]; }
 
   function syncSetting() {
@@ -104,11 +120,11 @@
 
   function drawSum() {
     if (!sumLine) { return; }
-    var parts = ['You'];
+    var parts = [T.you || 'You'];
     var n = parseInt(guests.value, 10);
-    if (now >= 1 && n > 0) { parts.push(n + (n === 1 ? ' guest' : ' guests')); }
-    var parties = checkedAll('parties[]');
-    if (now >= 2 && parties.length) { parts.push(parties.length > 2 ? parties[0] + ' and more' : parties.join(' and ')); }
+    if (now >= 1 && n > 0) { parts.push(guestsText(n)); }
+    var parties = checkedLabels('parties[]');
+    if (now >= 2 && parties.length) { parts.push(parties.length > 2 ? parties[0] + (T.more || ' and more') : parties.join(T.and || ' and ')); }
     sumLine.innerHTML = parts.map(esc).join(PLUS);
   }
 
@@ -119,7 +135,7 @@
     back.hidden = now === 0;
     next.hidden = now === steps.length - 1;
     send.hidden = now !== steps.length - 1;
-    count.textContent = (now + 1) + ' of ' + steps.length;
+    count.textContent = (now + 1) + (T.of || ' of ') + steps.length;
     fail('');
     drawSum();
     if (focus) {
@@ -139,20 +155,20 @@
 
   function problem(i) {
     var key = steps[i].getAttribute('data-step');
-    if (key === 'occasion' && !checked('event_type')) { return 'Pick the one that is closest.'; }
+    if (key === 'occasion' && !checked('event_type')) { return T.pick || 'Pick the one that is closest.'; }
     if (key === 'guests') {
       var n = parseInt(guests.value, 10);
-      if (!(n >= 1 && n <= 5000)) { return 'Tell us roughly how many guests.'; }
+      if (!(n >= 1 && n <= 5000)) { return T.guests || 'Tell us roughly how many guests.'; }
     }
     if (key === 'when') {
       var d = field('event_date').value;
-      if (d && d < field('event_date').min) { return 'Choose a date from today onwards, or leave it open.'; }
+      if (d && d < field('event_date').min) { return T.date || 'Choose a date from today onwards, or leave it open.'; }
     }
     if (key === 'you') {
-      if (!field('name').value.trim()) { return 'Tell us your name.'; }
-      if (field('phone').value.replace(/\D+/g, '').length < 8) { return 'Give us a mobile number we can reach you on.'; }
+      if (!field('name').value.trim()) { return T.name || 'Tell us your name.'; }
+      if (field('phone').value.replace(/\D+/g, '').length < 8) { return T.phone || 'Give us a mobile number we can reach you on.'; }
       var em = field('email').value.trim();
-      if (em && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { return 'That email address does not look right.'; }
+      if (em && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { return T.email || 'That email address does not look right.'; }
     }
     return '';
   }
@@ -203,8 +219,8 @@
   function finish(data) {
     var card = $('#wiz-done-card');
     var first = field('name').value.trim().split(/\s+/)[0];
-    $('#done-name').textContent = first ? ', ' + first : '';
-    $('#done-ref').textContent = data.ref ? 'Your reference: ' + data.ref : '';
+    $('#done-name').textContent = first ? (T.comma || ', ') + first : '';
+    $('#done-ref').textContent = data.ref ? (T.ref || 'Your reference: ') + data.ref : '';
     var wa = $('#done-wa');
     if (data.whatsapp) { wa.href = data.whatsapp; wa.hidden = false; } else { wa.hidden = true; }
     if (cfg.preview) { $('#done-preview').hidden = false; }
@@ -241,7 +257,7 @@
       return;
     }
     send.disabled = true;
-    send.textContent = 'Sending';
+    send.textContent = T.sending || 'Sending';
     fetch(cfg.endpoint || form.action, {
       method: 'POST',
       body: new FormData(form),
@@ -254,8 +270,8 @@
       throw new Error((out.data && out.data.error) || '');
     }).catch(function (err) {
       send.disabled = false;
-      send.textContent = 'Send my request';
-      fail(err && err.message ? err.message : 'That did not go through. Try again, or message us on WhatsApp.');
+      send.textContent = T.send || 'Send my request';
+      fail(err && err.message ? err.message : (T.failed || 'That did not go through. Try again, or message us on WhatsApp.'));
     });
   });
 

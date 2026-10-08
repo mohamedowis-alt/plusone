@@ -20,6 +20,8 @@ $menu ??= [
     'id' => 0, 'section_id' => (int) ($_GET['section'] ?? $sections[0]['id']), 'title' => '', 'season' => '', 'intro' => '',
     'image' => '', 'pdf' => '', 'is_published' => 1, 'is_sample' => 0, 'sort_order' => 1,
 ];
+$arabic = arabic_ready();   // the Arabic fields exist once update step 8 has run
+$menu += ['title_ar' => '', 'season_ar' => '', 'intro_ar' => ''];
 $dishes = $id ? rows('SELECT * FROM dishes WHERE menu_id = ? ORDER BY sort_order, id', [$id]) : [];
 $errors = [];
 
@@ -36,6 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $menu['title'] = post('title', 160);
     $menu['season'] = post('season', 80);
     $menu['intro'] = post('intro', 1000);
+    $menu['title_ar'] = post('title_ar', 160);
+    $menu['season_ar'] = post('season_ar', 80);
+    $menu['intro_ar'] = post('intro_ar', 1000);
     $menu['is_published'] = isset($_POST['is_published']) ? 1 : 0;
     $menu['sort_order'] = max(0, min(999, (int) post('sort_order')));
 
@@ -47,12 +52,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             continue;
         }
         $tag = (string) ($_POST['d_tag'][$i] ?? '');
-        $dishes[] = [
+        $dish = [
             'course' => mb_substr(trim((string) ($_POST['d_course'][$i] ?? '')), 0, 80),
             'name' => $name,
             'description' => mb_substr(trim((string) ($_POST['d_desc'][$i] ?? '')), 0, 400),
             'tag' => isset(DISH_TAGS[$tag]) ? $tag : '',
         ];
+        if ($arabic) {
+            $dish += [
+                'course_ar' => mb_substr(trim((string) ($_POST['d_course_ar'][$i] ?? '')), 0, 80),
+                'name_ar' => mb_substr(trim((string) ($_POST['d_name_ar'][$i] ?? '')), 0, 160),
+                'description_ar' => mb_substr(trim((string) ($_POST['d_desc_ar'][$i] ?? '')), 0, 400),
+            ];
+        }
+        $dishes[] = $dish;
     }
 
     if ($menu['title'] === '') {
@@ -87,6 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'is_published' => $menu['is_published'], 'is_sample' => 0, 'sort_order' => $menu['sort_order'],
             'updated_at' => now(),
         ];
+        if ($arabic) {
+            $data += ['title_ar' => $menu['title_ar'], 'season_ar' => $menu['season_ar'], 'intro_ar' => $menu['intro_ar']];
+        }
         if ($id) {
             update('menus', $data, $id);
         } else {
@@ -97,9 +113,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             insert('dishes', ['menu_id' => $id] + $d + ['sort_order' => $n + 1]);
         }
 
-        $all = $menu['title'] . ' ' . $menu['intro'];
+        $all = $menu['title'] . ' ' . $menu['intro'] . ' ' . $menu['title_ar'] . ' ' . $menu['intro_ar'];
         foreach ($dishes as $d) {
-            $all .= ' ' . $d['name'] . ' ' . $d['description'];
+            $all .= ' ' . $d['name'] . ' ' . $d['description'] . ' ' . ($d['name_ar'] ?? '') . ' ' . ($d['description_ar'] ?? '');
         }
         if (looks_like_price($all)) {
             flash('Saved. One thing: something in this menu looks like a price. The site shows menus without prices, so take it out if it is one.', 'warn');
@@ -111,10 +127,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Always offer a few empty rows to type into.
-$blank = ['course' => '', 'name' => '', 'description' => '', 'tag' => ''];
+$blank = ['course' => '', 'name' => '', 'description' => '', 'tag' => '', 'course_ar' => '', 'name_ar' => '', 'description_ar' => ''];
 $rowsToShow = $dishes ?: [$blank, $blank, $blank];
 
-$dishRow = function (array $d): string {
+$dishRow = function (array $d) use ($arabic): string {
     $opts = '';
     foreach (DISH_TAGS as $key => [$label]) {
         $opts .= '<option value="' . e($key) . '"' . ($d['tag'] === $key ? ' selected' : '') . '>' . e($label) . '</option>';
@@ -126,6 +142,11 @@ $dishRow = function (array $d): string {
         . '<input name="d_desc[]" value="' . e($d['description']) . '" placeholder="Picked this week and dressed at the table." aria-label="One line about it" maxlength="400">'
         . '<select name="d_tag[]" aria-label="Source tag">' . $opts . '</select>'
         . '<button type="button" class="del" data-del aria-label="Remove this dish">&times;</button>'
+        . ($arabic
+            ? '<input class="ar ar-course" name="d_course_ar[]" value="' . e($d['course_ar'] ?? '') . '" placeholder="للبداية" aria-label="Course, in Arabic" maxlength="80" dir="rtl" lang="ar">'
+            . '<input class="ar ar-name" name="d_name_ar[]" value="' . e($d['name_ar'] ?? '') . '" placeholder="ورقيات الحديقة" aria-label="Dish, in Arabic" maxlength="160" dir="rtl" lang="ar">'
+            . '<input class="ar ar-desc" name="d_desc_ar[]" value="' . e($d['description_ar'] ?? '') . '" placeholder="من قطاف هذا الأسبوع، تُتبَّل على المائدة." aria-label="One line about it, in Arabic" maxlength="400" dir="rtl" lang="ar">'
+            : '')
         . '</div>';
 };
 
@@ -136,7 +157,7 @@ admin_head($id ? 'Edit menu' : 'Add a menu', 'menus');
     <p><a href="menus.php">All menus</a></p>
     <h1><?= $id ? 'Edit menu' : 'Add a menu' ?></h1>
   </div>
-  <?php if ($id && (int) $menu['is_published']): ?><a class="btn ghost small" href="../index.php#menus" target="_blank" rel="noopener">See it on the site</a><?php endif; ?>
+  <?php if ($id && (int) $menu['is_published']): ?><a class="btn ghost small" href="../index.php#menus" target="_blank" rel="noopener">See it on the site</a><?php if ($arabic): ?> <a class="btn ghost small" href="../index.php?lang=ar#menus" target="_blank" rel="noopener">See it in Arabic</a><?php endif; ?><?php endif; ?>
 </div>
 
 <?php foreach ($errors as $err): ?><p class="note bad" role="alert"><?= e($err) ?></p><?php endforeach; ?>
@@ -159,14 +180,22 @@ admin_head($id ? 'Edit menu' : 'Add a menu', 'menus');
       <label class="full">A line or two about it <span class="hint">Plain words. No prices.</span>
         <textarea name="intro" maxlength="1000" rows="2"><?= e($menu['intro']) ?></textarea>
       </label>
+<?php if ($arabic): ?>
+      <p class="full in-arabic"><strong>In Arabic</strong> <span class="hint">Shown on the Arabic page. Leave one empty and the English shows in its place.</span></p>
+      <label>Menu name <input name="title_ar" value="<?= e($menu['title_ar']) ?>" maxlength="160" dir="rtl" lang="ar" placeholder="مائدة الخريف"></label>
+      <label>Season <input name="season_ar" value="<?= e($menu['season_ar']) ?>" maxlength="80" dir="rtl" lang="ar" placeholder="خريف 2026"></label>
+      <label class="full">A line or two about it
+        <textarea name="intro_ar" maxlength="1000" rows="2" dir="rtl" lang="ar"><?= e($menu['intro_ar']) ?></textarea>
+      </label>
+<?php endif; ?>
     </div>
   </div>
 
   <div class="card">
     <h2>Dishes</h2>
-    <p class="muted" style="margin-bottom:14px">One row per dish. "Course" groups dishes under a small heading, such as To start or From the grill. Give a dish a source tag only when it is true for that dish.</p>
+    <p class="muted" style="margin-bottom:14px">One row per dish. "Course" groups dishes under a small heading, such as To start or From the grill. Give a dish a source tag only when it is true for that dish.<?php if ($arabic): ?> The second line of each dish is its Arabic. Leave it empty and the Arabic page shows the English.<?php endif; ?></p>
     <div class="dish-head"><span></span><span>Course</span><span>Dish</span><span>One line about it</span><span>Source tag</span><span></span></div>
-    <div class="dishes" id="dishes">
+    <div class="dishes<?= $arabic ? ' with-arabic' : '' ?>" id="dishes">
 <?php foreach ($rowsToShow as $d): ?>
       <?= $dishRow($d) ?>
 <?php endforeach; ?>
@@ -218,7 +247,12 @@ admin_head($id ? 'Edit menu' : 'Add a menu', 'menus');
     var rows = list.querySelectorAll('.dish-row');
     var node = tpl.content.firstElementChild.cloneNode(true);
     // Carry the course down, since dishes usually come in groups.
-    if (rows.length) { node.querySelector('[name="d_course[]"]').value = rows[rows.length - 1].querySelector('[name="d_course[]"]').value; }
+    if (rows.length) {
+      ['d_course[]', 'd_course_ar[]'].forEach(function (name) {
+        var from = rows[rows.length - 1].querySelector('[name="' + name + '"]');
+        if (from) { node.querySelector('[name="' + name + '"]').value = from.value; }
+      });
+    }
     list.appendChild(node);
     node.querySelector('[name="d_name[]"]').focus();
   });

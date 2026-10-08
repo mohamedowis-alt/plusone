@@ -12,7 +12,7 @@ fwrite($out, "\xEF\xBB\xBF"); // so Excel reads accents and Arabic correctly
 $cols = [
     'Reference', 'Sent', 'Status', 'Name', 'Company', 'Mobile', 'Email', 'Reply by', 'Setting', 'Occasion', 'Guests',
     'Party', 'Service', 'Event date', 'Time of day', 'Area', 'Indoors or out', 'Vibe', 'Live cooking', 'Dietary needs',
-    'Budget', 'Notes', 'Team notes',
+    'Budget', 'Notes', 'Team notes', 'Language',
 ];
 fputcsv($out, $cols);
 
@@ -25,6 +25,7 @@ foreach (rows('SELECT * FROM requests ORDER BY id DESC') as $r) {
         $r['phone'], $r['email'], $r['contact_pref'], SETTINGS_LABELS[$r['setting']] ?? '', $r['event_type'], $r['guests'],
         $r['parties'], STYLES[$r['style']][0] ?? '', $r['event_date'], $r['time_of_day'], $r['area'], $r['venue'],
         $r['vibe'], LIVE_COOKING[$r['live_cooking']] ?? '', $r['dietary'], $r['budget'], $r['notes'], $r['admin_note'],
+        ($r['lang'] ?? 'en') === 'ar' ? 'Arabic' : 'English',
     ]));
 }
 fclose($out);

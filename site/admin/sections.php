@@ -6,6 +6,7 @@ require_login();
 
 $editId = isset($_GET['edit']) ? (int) $_GET['edit'] : null;   // 0 = a new party
 $errors = [];
+$arabic = arabic_ready();   // the Arabic fields exist once update step 8 has run
 $form = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -35,6 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'sort_order' => max(0, min(999, (int) post('sort_order'))),
             'is_visible' => isset($_POST['is_visible']) ? 1 : 0,
         ];
+        if ($arabic) {
+            $form += [
+                'name_ar' => post('name_ar', 80), 'sum_a_ar' => post('sum_a_ar', 40),
+                'sum_b_ar' => post('sum_b_ar', 40), 'best_for_ar' => post('best_for_ar', 160),
+            ];
+        }
         if ($form['name'] === '') {
             $errors[] = 'Give the party a name.';
         }
@@ -67,6 +74,7 @@ if ($editId !== null && $form === null) {
     $form = $editId ? row('SELECT * FROM sections WHERE id = ?', [$editId]) : [
         'id' => 0, 'name' => '', 'sum_a' => '', 'sum_b' => '', 'best_for' => '', 'mark' => 'plain', 'colour' => 'amber',
         'sort_order' => count($sections) + 1, 'is_visible' => 1,
+        'name_ar' => '', 'sum_a_ar' => '', 'sum_b_ar' => '', 'best_for_ar' => '',
     ];
     if (!$form) {
         redirect('sections.php');
@@ -96,6 +104,13 @@ admin_head('Parties', 'sections');
     <label>The sum, first half <span class="hint">Shown big on the tile: Fire + friends.</span><input name="sum_a" value="<?= e($form['sum_a']) ?>" maxlength="40" placeholder="Fire" required></label>
     <label>The sum, second half <span class="hint">The plus between them is drawn for you.</span><input name="sum_b" value="<?= e($form['sum_b']) ?>" maxlength="40" placeholder="friends"></label>
     <label class="full">Best for <input name="best_for" value="<?= e($form['best_for']) ?>" maxlength="160" placeholder="Gardens, rooftops, Sahel"></label>
+<?php if ($arabic): ?>
+    <p class="full in-arabic"><strong>In Arabic</strong> <span class="hint">Shown on the Arabic page. Leave one empty and the English shows in its place.</span></p>
+    <label>Name <input name="name_ar" value="<?= e($form['name_ar'] ?? '') ?>" maxlength="80" dir="rtl" lang="ar" placeholder="باربكيو"></label>
+    <label>The sum, first half <input name="sum_a_ar" value="<?= e($form['sum_a_ar'] ?? '') ?>" maxlength="40" dir="rtl" lang="ar" placeholder="نار"></label>
+    <label>The sum, second half <input name="sum_b_ar" value="<?= e($form['sum_b_ar'] ?? '') ?>" maxlength="40" dir="rtl" lang="ar" placeholder="أصحاب"></label>
+    <label class="full">Best for <input name="best_for_ar" value="<?= e($form['best_for_ar'] ?? '') ?>" maxlength="160" dir="rtl" lang="ar" placeholder="الحدائق، الأسطح، الساحل"></label>
+<?php endif; ?>
     <label>Plus mark
       <select name="mark">
 <?php foreach (SECTION_MARKS as $key => $label): ?>
@@ -127,7 +142,7 @@ admin_head('Parties', 'sections');
 <?php foreach ($sections as $s): ?>
     <tr>
       <td><span class="section-swatch c-<?= e($s['colour']) ?>"><?= mark($s['mark']) ?></span></td>
-      <td><strong><?= e($s['name']) ?></strong><br><span class="muted"><?= e($s['best_for']) ?></span></td>
+      <td><strong><?= e($s['name']) ?></strong><?php if (($s['name_ar'] ?? '') !== ''): ?> <span class="muted" dir="rtl" lang="ar"><?= e($s['name_ar']) ?></span><?php endif; ?><br><span class="muted"><?= e($s['best_for']) ?></span></td>
       <td><?= e($s['sum_a']) ?><?= $s['sum_b'] !== '' ? ' + ' . e($s['sum_b']) : '' ?></td>
       <td><a href="menus.php"><?= (int) $s['menu_count'] ?></a></td>
       <td><span class="pill <?= (int) $s['is_visible'] ? 's-won' : 'off' ?>"><?= (int) $s['is_visible'] ? 'Showing' : 'Hidden' ?></span></td>

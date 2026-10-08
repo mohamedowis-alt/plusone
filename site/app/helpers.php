@@ -164,7 +164,7 @@ function plus(string $class = 'plus'): string
 function sum(string $a, string $b): string
 {
     return '<span class="sum"><span>' . e($a) . '</span> ' . plus('plus sum-plus')
-        . '<span class="vh"> plus </span> <span>' . e($b) . '</span></span>';
+        . '<span class="vh">' . te(' plus ') . '</span> <span>' . e($b) . '</span></span>';
 }
 
 function logo(string $kind = 'inline', string $class = ''): string
@@ -199,6 +199,7 @@ function request_rows(array $r): array
         'Mobile'        => $r['phone'],
         'Email'         => $r['email'],
         'Reply by'      => $r['contact_pref'],
+        'Language'      => ($r['lang'] ?? 'en') === 'ar' ? 'Arabic' : '',
     ];
     return array_filter($rows, fn ($v) => trim((string) $v) !== '');
 }

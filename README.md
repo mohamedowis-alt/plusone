@@ -61,8 +61,20 @@ Where things are:
 | The wizard's choices (occasions, vibes, areas, dietary needs) | `site/app/options.php` |
 | The emails | `site/app/mail.php` |
 | The admin pages | `site/admin/` |
+| The Arabic for the site's own words | `site/app/lang.ar.php` |
+| Arabic type and right-to-left layout | the "Arabic" part at the end of `site/assets/css/site.css` |
 
 Only files inside `site/` reach the server.
+
+## English and Arabic
+
+The site is one page in two languages. English is at the site's address. Arabic is the same page at `?lang=ar` and reads right to left. Each page links to the other in the header and the footer.
+
+- The site's own words (headlines, buttons, the quote questions) are translated in `site/app/lang.ar.php`: English on the left, Arabic on the right. A text with no Arabic shows in English.
+- The Arabic names of parties, menus and dishes are typed in the admin, beside the English. Leave one empty and the Arabic page shows the English.
+- A new text added to `site/index.php` needs to be wrapped like the ones around it, `<?= te('Text') ?>`, and given its Arabic in `lang.ar.php`.
+- Layout rules in the stylesheet are written with start and end, never left and right, so the Arabic page turns round by itself. Keep it that way.
+- A quote request remembers its language. The team's email and the admin stay in English and say when a guest wrote in Arabic. The guest's confirmation email is in their language.
 
 ## Updates that change the database
 

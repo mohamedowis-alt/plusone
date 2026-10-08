@@ -14,6 +14,7 @@ ini_set('log_errors', '1');
 require_once __DIR__ . '/marks.data.php';
 require_once __DIR__ . '/options.php';
 require_once __DIR__ . '/helpers.php';
+require_once __DIR__ . '/lang.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/mail.php';
 require_once __DIR__ . '/auth.php';

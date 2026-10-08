@@ -120,11 +120,22 @@ input[type=file] { display: block; margin-top: 8px; font-weight: 400; letter-spa
 .dish-row .grab { cursor: grab; text-align: center; color: var(--muted); user-select: none; display: grid; gap: 2px; }
 .dish-row .grab button { border: 0; background: none; cursor: pointer; padding: 0; line-height: 1; font-size: 12px; }
 .dish-row .del { border: 0; background: none; cursor: pointer; font-size: 22px; line-height: 1; color: #8E1B1B; }
+/* The Arabic of a dish sits on a second line, under the English it belongs to. */
+.in-arabic { margin: 6px 0 -4px; padding-top: 14px; border-top: 1px solid var(--rule); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; }
+.in-arabic .hint { letter-spacing: 0; text-transform: none; }
+input[lang="ar"], textarea[lang="ar"] { font-size: 17px; }
+@media (min-width: 861px) {
+  .dishes.with-arabic { gap: 0; }
+  .dishes.with-arabic .dish-row { padding: 10px 0; border-top: 1px solid var(--rule); row-gap: 6px; }
+  .dish-row .ar-course { grid-column: 2; grid-row: 2; }
+  .dish-row .ar-name { grid-column: 3; grid-row: 2; }
+  .dish-row .ar-desc { grid-column: 4; grid-row: 2; }
+}
 @media (max-width: 860px) {
   .dish-head { display: none; }
   .dish-row { grid-template-columns: 26px minmax(0, 1fr) 34px; border: 2px solid #000; border-radius: 12px; padding: 10px; background: #fff; }
   .dish-row > input, .dish-row > select { grid-column: 2; }
-  .dish-row .grab { grid-row: 1 / span 4; }
+  .dish-row .grab { grid-row: 1 / span 7; }
   .dish-row .del { grid-row: 1; grid-column: 3; }
 }
 .thumb { max-width: 220px; border-radius: 12px; border: 2px solid #000; display: block; margin-top: 8px; }

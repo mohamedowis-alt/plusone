@@ -35,7 +35,11 @@ function create_schema(PDO $pdo, string $driver): void
             mark VARCHAR(20) NOT NULL,
             colour VARCHAR(20) NOT NULL,
             sort_order INT NOT NULL,
-            is_visible INT NOT NULL
+            is_visible INT NOT NULL,
+            name_ar VARCHAR(80) NOT NULL DEFAULT '',
+            sum_a_ar VARCHAR(40) NOT NULL DEFAULT '',
+            sum_b_ar VARCHAR(40) NOT NULL DEFAULT '',
+            best_for_ar VARCHAR(160) NOT NULL DEFAULT ''
         )$end",
         "CREATE TABLE IF NOT EXISTS menus (
             id $pk,
@@ -48,7 +52,10 @@ function create_schema(PDO $pdo, string $driver): void
             is_published INT NOT NULL,
             is_sample INT NOT NULL,
             sort_order INT NOT NULL,
-            updated_at VARCHAR(19) NOT NULL
+            updated_at VARCHAR(19) NOT NULL,
+            title_ar VARCHAR(160) NOT NULL DEFAULT '',
+            season_ar VARCHAR(80) NOT NULL DEFAULT '',
+            intro_ar VARCHAR(1000) NOT NULL DEFAULT ''
         )$end",
         "CREATE TABLE IF NOT EXISTS dishes (
             id $pk,
@@ -57,7 +64,10 @@ function create_schema(PDO $pdo, string $driver): void
             name VARCHAR(160) NOT NULL,
             description VARCHAR(400) NOT NULL,
             tag VARCHAR(20) NOT NULL,
-            sort_order INT NOT NULL
+            sort_order INT NOT NULL,
+            course_ar VARCHAR(80) NOT NULL DEFAULT '',
+            name_ar VARCHAR(160) NOT NULL DEFAULT '',
+            description_ar VARCHAR(400) NOT NULL DEFAULT ''
         )$end",
         "CREATE TABLE IF NOT EXISTS requests (
             id $pk,
@@ -84,7 +94,8 @@ function create_schema(PDO $pdo, string $driver): void
             notes TEXT NOT NULL,
             admin_note TEXT NOT NULL,
             ip VARCHAR(64) NOT NULL,
-            email_sent INT NOT NULL
+            email_sent INT NOT NULL,
+            lang VARCHAR(5) NOT NULL DEFAULT 'en'
         )$end",
     ];
     foreach ($tables as $sql) {
@@ -167,4 +178,7 @@ function seed_content(PDO $pdo, string $notifyEmail, string $fromEmail): void
             ]);
         }
     }
+
+    // The Arabic for everything above.
+    arabic_fill($pdo);
 }

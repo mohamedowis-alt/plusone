@@ -94,5 +94,5 @@ function delete_upload(string $name): void
 /** Does this text look like it carries a price? The site shows menus without prices. */
 function looks_like_price(string $text): bool
 {
-    return (bool) preg_match('/(EGP|L\.?E\.?|USD|\$|€|£|جنيه)\s*\d|\d[\d,.]*\s*(EGP|L\.?E\.?\b|USD|pounds|جنيه)/iu', $text);
+    return (bool) preg_match('/(EGP|L\.?E\.?|USD|\$|€|£|جنيه|ج\.م)\s*\d|\d[\d,.]*\s*(EGP|L\.?E\.?\b|USD|pounds|جنيه|ج\.م)/iu', $text);
 }

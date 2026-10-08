@@ -19,14 +19,16 @@ function quote_reply(bool $ok, array $data, bool $json): void
         echo json_encode(['ok' => $ok] + $data);
         exit;
     }
+    // Back to the page in the language the request was written in.
+    $back = 'index.php?' . (lang() === 'ar' ? 'lang=ar&' : '');
     if ($ok) {
-        redirect('index.php?sent=' . rawurlencode($data['ref']) . '#quote');
+        redirect($back . 'sent=' . rawurlencode($data['ref']) . '#quote');
     }
-    redirect('index.php?problem=' . rawurlencode($data['error']) . '#quote');
+    redirect($back . 'problem=' . rawurlencode($data['error']) . '#quote');
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('index.php#quote');
+    redirect('index.php' . (lang() === 'ar' ? '?lang=ar' : '') . '#quote');
 }
 
 // Robots: a hidden field people never fill in, and a signed time stamp.
@@ -34,11 +36,11 @@ if (post('website') !== '') {
     quote_reply(true, ['ref' => 'P1-0000', 'whatsapp' => ''], $wantsJson);
 }
 if (!form_stamp_ok(post('stamp', 120))) {
-    quote_reply(false, ['error' => 'This page has been open for a while. Reload it and send again.'], $wantsJson);
+    quote_reply(false, ['error' => t('This page has been open for a while. Reload it and send again.')], $wantsJson);
 }
 $hourAgo = date('Y-m-d H:i:s', time() - 3600);
 if ((int) val('SELECT COUNT(*) FROM requests WHERE ip = ? AND created_at > ?', [client_ip(), $hourAgo]) >= 6) {
-    quote_reply(false, ['error' => 'That is a lot of requests in one hour. Message us on WhatsApp instead.'], $wantsJson);
+    quote_reply(false, ['error' => t('That is a lot of requests in one hour. Message us on WhatsApp instead.')], $wantsJson);
 }
 
 $setting = post('setting') === 'work' ? 'work' : 'home';
@@ -78,22 +80,22 @@ $email = strtolower(post('email', 190));
 
 $problems = [];
 if ($eventType === '') {
-    $problems[] = 'Tell us what brings everyone together.';
+    $problems[] = t('Tell us what brings everyone together.');
 }
 if ($guests < 1 || $guests > 5000) {
-    $problems[] = 'Tell us roughly how many guests.';
+    $problems[] = t('Tell us roughly how many guests.');
 }
 if (!empty($badDate)) {
-    $problems[] = 'Choose a date from today onwards, or leave it open.';
+    $problems[] = t('Choose a date from today onwards, or leave it open.');
 }
 if ($name === '') {
-    $problems[] = 'Tell us your name.';
+    $problems[] = t('Tell us your name.');
 }
 if (strlen(preg_replace('/\D+/', '', $phone) ?? '') < 8) {
-    $problems[] = 'Give us a mobile number we can reach you on.';
+    $problems[] = t('Give us a mobile number we can reach you on.');
 }
 if ($email !== '' && !mail_valid($email)) {
-    $problems[] = 'That email address does not look right.';
+    $problems[] = t('That email address does not look right.');
 }
 if ($problems) {
     quote_reply(false, ['error' => implode(' ', $problems)], $wantsJson);
@@ -125,6 +127,10 @@ $r = [
     'ip'           => client_ip(),
     'email_sent'   => 0,
 ];
+// The language the guest wrote in, so the team knows how to reply.
+if (arabic_ready()) {
+    $r['lang'] = lang();
+}
 $r['id'] = insert('requests', $r);
 
 // The request is safe in the database whatever happens to the email.
@@ -138,7 +144,9 @@ if ($email !== '' && setting('confirm_guest', '1') === '1') {
 
 $ref = request_ref($r['id']);
 $wa = wa_number((string) setting('whatsapp', ''));
-$message = 'Hello +1, I just sent a request on your website (' . $ref . '): ' . request_headline($r) . '.';
+$message = lang() === 'ar'
+    ? sprintf(t('Hello +1, I just sent a request on your website (%s).'), $ref)
+    : 'Hello +1, I just sent a request on your website (' . $ref . '): ' . request_headline($r) . '.';
 quote_reply(true, [
     'ref' => $ref,
     'whatsapp' => $wa !== '' ? 'https://wa.me/' . $wa . '?text=' . rawurlencode($message) : '',

@@ -173,15 +173,18 @@ function smtp_send(string $from, array $to, string $message): void
 
 // ---------------------------------------------------------------- the emails
 
-function mail_layout(string $title, string $inner): string
+function mail_layout(string $title, string $inner, string $lang = 'en'): string
 {
-    return '<!doctype html><html><body style="margin:0;padding:0;background:#FBF7C6;">'
+    // An Arabic email reads right to left. The brand name keeps its own direction.
+    $dir = $lang === 'ar' ? ' dir="rtl"' : '';
+    $side = $lang === 'ar' ? 'text-align:right;' : '';
+    return '<!doctype html><html' . ($lang === 'ar' ? ' lang="ar" dir="rtl"' : '') . '><body style="margin:0;padding:0;background:#FBF7C6;">'
         . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FBF7C6;"><tr><td align="center" style="padding:24px 12px;">'
-        . '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;font-family:Helvetica,Arial,sans-serif;color:#000000;">'
-        . '<tr><td style="background:#F6B11A;padding:22px 28px;font-size:13px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;">+1 by RDNA</td></tr>'
-        . '<tr><td style="background:#FFFDE8;padding:28px;"><h1 style="margin:0 0 18px;font-size:24px;line-height:1.2;">' . e($title) . '</h1>'
+        . '<table role="presentation" width="600" cellpadding="0" cellspacing="0"' . $dir . ' style="max-width:600px;width:100%;font-family:Helvetica,Arial,sans-serif;color:#000000;">'
+        . '<tr><td dir="ltr" style="background:#F6B11A;padding:22px 28px;font-size:13px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;' . $side . '">+1 by RDNA</td></tr>'
+        . '<tr><td style="background:#FFFDE8;padding:28px;' . $side . '"><h1 style="margin:0 0 18px;font-size:24px;line-height:1.2;">' . e($title) . '</h1>'
         . $inner . '</td></tr>'
-        . '<tr><td style="background:#000000;color:#FBF7C6;padding:16px 28px;font-size:13px;">Our ingredients. Your event.</td></tr>'
+        . '<tr><td style="background:#000000;color:#FBF7C6;padding:16px 28px;font-size:13px;' . $side . '">' . e(tr('Our ingredients. Your event.', $lang)) . '</td></tr>'
         . '</table></td></tr></table></body></html>';
 }
 
@@ -222,6 +225,21 @@ function mail_request_to_guest(array $r): array
     $ref = request_ref((int) $r['id']);
     $first = trim((string) strtok($r['name'], ' '));
     $wa = 'https://wa.me/' . wa_number((string) setting('whatsapp', ''));
+    if (($r['lang'] ?? 'en') === 'ar') {
+        // A guest who wrote in Arabic is answered in Arabic.
+        $a = fn (string $s): string => tr($s, 'ar');
+        $p = '<p style="margin:0 0 14px;font-size:17px;line-height:1.7;">';
+        $inner = $p . e(sprintf($a('Hello %s,'), $first)) . '</p>'
+            . $p . e($a('Your request is with us.')) . ' '
+            . e($a('We will come back to you with a menu made for your gathering, and where every dish comes from.')) . '</p>'
+            . $p . sprintf(e($a('Your reference is %s.')), '<strong dir="ltr">' . e($ref) . '</strong>') . ' '
+            . sprintf(e($a('To add anything, message us on %sWhatsApp%s.')), '<a href="' . e($wa) . '" style="color:#000000;font-weight:bold;">', '</a>') . '</p>';
+        $text = sprintf($a('Hello %s,'), $first) . "\n\n" . $a('Your request is with us.') . "\n"
+            . $a('We will come back to you with a menu made for your gathering, and where every dish comes from.') . "\n\n"
+            . sprintf($a('Your reference is %s.'), $ref) . "\n" . sprintf($a('To add anything, message us on WhatsApp: %s'), $wa)
+            . "\n\n+1 by RDNA\n" . $a('Our ingredients. Your event.') . "\n";
+        return send_mail([$r['email']], sprintf($a('We have your request (%s)'), $ref), mail_layout($a('We have your request'), $inner, 'ar'), $text);
+    }
     $inner = '<p style="margin:0 0 14px;font-size:16px;line-height:1.5;">Hello ' . e($first) . ',</p>'
         . '<p style="margin:0 0 14px;font-size:16px;line-height:1.5;">Your request is with us: ' . e(request_headline($r)) . '. '
         . 'We will come back to you with a menu made for your gathering, and where every dish comes from.</p>'
