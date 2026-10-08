@@ -13,11 +13,11 @@
 return [
     // ------------------------------------------------------------ the page
     '+1 by RDNA | Catering and events in Cairo' => '{+1} by RDNA | كيترينج ومناسبات في القاهرة',
-    'Bring us as your plus one. Catering for gatherings at home and at work, with local ingredients from RDNA, made with love.'
-        => 'خدنا معاك. كيترينج للمّاتك في البيت وفي الشغل، بمكونات محلية من RDNA، معمولة بحب.',
+    'Bring us as your plus one. Catering for gatherings at home and at work. From our farm to your table: we grow it, butcher it, make it and cook it ourselves.'
+        => 'خدنا معاك. كيترينج للمّاتك في البيت وفي الشغل. من مزرعتنا لحد سفرتك: بنزرعه وبنقطّعه وبنعمله وبنطبخه بإيدينا.',
     '+1 by RDNA. Bring us as your plus one.' => '{+1} by RDNA. خدنا معاك.',
-    'Local ingredients from RDNA. Made with love. Shared with the people you gather.'
-        => 'مكونات محلية من RDNA. معمولة بحب. تشاركها مع الناس اللي بتجمعهم.',
+    'From our farm to your table. We grow it, butcher it, make it and cook it ourselves.'
+        => 'من مزرعتنا لحد سفرتك. بنزرعه وبنقطّعه وبنعمله وبنطبخه بإيدينا.',
     'Skip to the content' => 'روح للمحتوى',
     '+1 by RDNA, top of the page' => '{+1} by RDNA، أول الصفحة',
     'Sections' => 'أقسام الصفحة',
@@ -45,6 +45,7 @@ return [
     'Tap the plus' => 'دوس على علامة الزائد',
 
     // ------------------------------------------------------------ the promise
+    'Farm to fork' => 'من المزرعة للسفرة',
     'Local ingredients.<br>Made with love.' => 'مكونات محلية.<br>معمولة بحب.',
     'You know RDNA from its stores. +1 brings the same ingredients to your gathering, cooked by the people who produce them.'
         => 'إنت عارف RDNA من محلاتها. {+1} بيجيب نفس المكونات للمّتك، واللي بيطبخها هم نفس الناس اللي بينتجوها.',

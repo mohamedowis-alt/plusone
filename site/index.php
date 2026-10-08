@@ -46,9 +46,9 @@ $partyWords = [2 => 'Two', 3 => 'Three', 4 => 'Four', 5 => 'Five', 6 => 'Six', 7
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= te('+1 by RDNA | Catering and events in Cairo') ?></title>
-<meta name="description" content="<?= te('Bring us as your plus one. Catering for gatherings at home and at work, with local ingredients from RDNA, made with love.') ?>">
+<meta name="description" content="<?= te('Bring us as your plus one. Catering for gatherings at home and at work. From our farm to your table: we grow it, butcher it, make it and cook it ourselves.') ?>">
 <meta property="og:title" content="<?= te('+1 by RDNA. Bring us as your plus one.') ?>">
-<meta property="og:description" content="<?= te('Local ingredients from RDNA. Made with love. Shared with the people you gather.') ?>">
+<meta property="og:description" content="<?= te('From our farm to your table. We grow it, butcher it, make it and cook it ourselves.') ?>">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="<?= $ar ? 'ar_EG' : 'en_GB' ?>">
 <link rel="alternate" hreflang="en" href="<?= e(site_url()) ?>">
@@ -104,7 +104,7 @@ $partyWords = [2 => 'Two', 3 => 'Three', 4 => 'Four', 5 => 'Five', 6 => 'Six', 7
     <div class="hero-copy">
       <p class="eyebrow"><?= te('Catering & events') ?></p>
       <h1><?= t('Bring us<br>as your<br>plus one.') ?></h1>
-      <p class="lede"><?= te('Local ingredients from RDNA. Made with love. Shared with the people you gather.') ?></p>
+      <p class="lede"><?= te('From our farm to your table. We grow it, butcher it, make it and cook it ourselves.') ?></p>
       <div class="actions">
         <a class="btn btn-ink" href="#quote"><?= te('Plan your gathering') ?></a>
         <a class="btn" href="#menus"><?= te("See this season's menus") ?></a>
@@ -125,16 +125,16 @@ $partyWords = [2 => 'Two', 3 => 'Three', 4 => 'Four', 5 => 'Five', 6 => 'Six', 7
 <section id="promise">
   <div class="wrap">
     <div class="head">
-      <p class="eyebrow"><?= te('The promise') ?></p>
+      <p class="eyebrow"><?= te('Farm to fork') ?></p>
       <h2><?= t('Local ingredients.<br>Made with love.') ?></h2>
       <p class="lede"><?= te('You know RDNA from its stores. +1 brings the same ingredients to your gathering, cooked by the people who produce them.') ?></p>
     </div>
-    <ul class="tiles">
-      <li class="tile on-green"><?= mark('sprout') ?><h3><?= te('We grow it') ?></h3><p><?= te("Produce from RDNA's own land, or from a farm we name.") ?></p></li>
-      <li class="tile on-red"><?= mark('slice') ?><h3><?= te('We butcher it') ?></h3><p><?= te('Meat raised by us and cut in our own butchery.') ?></p></li>
-      <li class="tile on-yellow"><?= mark('check') ?><h3><?= te('We make it') ?></h3><p><?= te('From scratch. Everything is fresh. No powder, no chemical.') ?></p></li>
-      <li class="tile on-purple"><?= mark('steam') ?><h3><?= te('We cook it') ?></h3><p><?= te('To order, at your event, in front of your guests.') ?></p></li>
-    </ul>
+    <ol class="tiles">
+      <li class="tile on-green"><span class="no" aria-hidden="true">1</span><?= mark('sprout') ?><h3><?= te('We grow it') ?></h3><p><?= te("Produce from RDNA's own land, or from a farm we name.") ?></p></li>
+      <li class="tile on-red"><span class="no" aria-hidden="true">2</span><?= mark('slice') ?><h3><?= te('We butcher it') ?></h3><p><?= te('Meat raised by us and cut in our own butchery.') ?></p></li>
+      <li class="tile on-yellow"><span class="no" aria-hidden="true">3</span><?= mark('check') ?><h3><?= te('We make it') ?></h3><p><?= te('From scratch. Everything is fresh. No powder, no chemical.') ?></p></li>
+      <li class="tile on-purple"><span class="no" aria-hidden="true">4</span><?= mark('steam') ?><h3><?= te('We cook it') ?></h3><p><?= te('To order, at your event, in front of your guests.') ?></p></li>
+    </ol>
   </div>
 </section>
 

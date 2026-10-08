@@ -173,7 +173,9 @@ section { padding: clamp(64px, 9vw, 128px) 0; }
 
 /* ------------------------------------------------------------ promise */
 .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-.tile { border-radius: var(--r); padding: 26px 24px 28px; display: grid; gap: 10px; align-content: start; transition: transform .2s ease; }
+.tile { position: relative; border-radius: var(--r); padding: 26px 24px 28px; display: grid; gap: 10px; align-content: start; transition: transform .2s ease; }
+/* The four tiles are one chain, farm to fork, so each carries its place in it. */
+.tile .no { position: absolute; top: 20px; inset-inline-end: 22px; font-family: "Eyeful", Impact, "Arial Narrow Bold", sans-serif; font-weight: 400; font-size: 44px; line-height: 1; }
 .tile .mark { height: 74px; width: auto; margin-bottom: 10px; transform-origin: 50% 80%; transition: transform .3s cubic-bezier(.2, 1.6, .4, 1); }
 .tile h3 { font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: 34px; line-height: .95; }
 .tile p { font-size: 16px; line-height: 1.45; }
