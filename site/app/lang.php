@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 // Two languages: English and Arabic.
 //
+// The Arabic is Egyptian Arabic, the way people speak, not formal Arabic.
 // English is the text written in the pages. Arabic comes from two places:
 //   app/lang.ar.php   the site's own words (headlines, buttons, the quote questions)
 //   the database      the Arabic name of each party, menu and dish, typed in the admin
@@ -110,10 +111,19 @@ function arabic_columns(PDO $db, string $driver): void
  * Fills in the Arabic for the parties, menus and dishes the site started with.
  * Only where the Arabic is still empty and the English is still the starting text,
  * so anything the team has written or changed is left alone.
+ * $replace is an earlier set of starting Arabic texts: an Arabic field that still
+ * holds one of those, untouched, is brought up to date as well.
  */
-function arabic_fill(PDO $db): void
+function arabic_fill(PDO $db, array $replace = []): void
 {
     $map = require __DIR__ . '/menus.ar.php';
+    // Earlier Arabic text -> today's, for a row whose English the team has since reworded.
+    $newer = [];
+    foreach ($replace as $en => $old) {
+        if (isset($map[$en])) {
+            $newer[$old] = isset($newer[$old]) && $newer[$old] !== $map[$en] ? false : $map[$en];
+        }
+    }
     foreach (ARABIC_FIELDS as $table => $fields) {
         $cols = [];
         foreach ($fields as $field => $length) {
@@ -125,8 +135,11 @@ function arabic_fill(PDO $db): void
             $set = [];
             foreach ($fields as $field => $length) {
                 $en = (string) $r[$field];
-                if ((string) $r[$field . '_ar'] === '' && isset($map[$en]) && mb_strlen($map[$en]) <= $length) {
-                    $set[$field . '_ar'] = $map[$en];
+                $now = (string) $r[$field . '_ar'];
+                $open = $now === '' || (isset($replace[$en]) && $now === $replace[$en]);
+                $to = $open && isset($map[$en]) ? $map[$en] : ($now !== '' && !empty($newer[$now]) ? $newer[$now] : null);
+                if ($to !== null && $to !== $now && mb_strlen($to) <= $length) {
+                    $set[$field . '_ar'] = $to;
                 }
             }
             if ($set) {

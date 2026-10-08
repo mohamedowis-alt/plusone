@@ -99,11 +99,11 @@
 
   function guestsText(n) {
     if (cfg.lang === 'ar') {
-      // Arabic counts in its own way: 1 and 2 have their own words, 3 to 10 take the plural, the rest the singular.
+      // Egyptian Arabic counts in its own way: 1 and 2 have their own words, 3 to 10 take the plural, the rest the singular.
       if (n === 1) { return 'ضيف واحد'; }
-      if (n === 2) { return 'ضيفان'; }
+      if (n === 2) { return 'ضيفين'; }
       var r = n % 100;
-      return n + (r >= 3 && r <= 10 ? ' ضيوف' : r >= 11 ? ' ضيفاً' : ' ضيف');
+      return n + (r >= 3 && r <= 10 ? ' ضيوف' : ' ضيف');
     }
     return n + (n === 1 ? ' guest' : ' guests');
   }

@@ -14,7 +14,7 @@ declare(strict_types=1);
 // Steps must work on both MySQL and SQLite. Never edit a step that has already
 // been deployed. Add a new one instead.
 
-const SCHEMA_VERSION = 8;
+const SCHEMA_VERSION = 9;
 
 function migration_steps(): array
 {
@@ -146,7 +146,13 @@ function migration_steps(): array
             arabic_columns($db, $driver);
             arabic_fill($db);
         },
-        // 9 => function (PDO $db, string $driver): void {
+        // 9: the Arabic changes from formal Arabic to Egyptian Arabic, the way people speak.
+        // Only an Arabic text that is still the formal one the site filled in itself is replaced.
+        // Anything the team has typed or changed in the admin is left alone.
+        9 => function (PDO $db, string $driver): void {
+            arabic_fill($db, require __DIR__ . '/menus.ar.first.php');
+        },
+        // 10 => function (PDO $db, string $driver): void {
         //     $db->exec("ALTER TABLE requests ADD COLUMN source VARCHAR(80) NOT NULL DEFAULT ''");
         // },
     ];

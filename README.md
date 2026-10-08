@@ -70,6 +70,7 @@ Only files inside `site/` reach the server.
 
 The site is one page in two languages. English is at the site's address. Arabic is the same page at `?lang=ar` and reads right to left. Each page links to the other in the header and the footer.
 
+- The Arabic is Egyptian Arabic, the way people speak, not formal Arabic. Keep new texts in the same voice.
 - The site's own words (headlines, buttons, the quote questions) are translated in `site/app/lang.ar.php`: English on the left, Arabic on the right. A text with no Arabic shows in English.
 - The Arabic names of parties, menus and dishes are typed in the admin, beside the English. Leave one empty and the Arabic page shows the English.
 - A new text added to `site/index.php` needs to be wrapped like the ones around it, `<?= te('Text') ?>`, and given its Arabic in `lang.ar.php`.
